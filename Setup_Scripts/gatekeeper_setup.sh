@@ -8,4 +8,4 @@ cd LOG8415-Final-Project/Gatekeeper
 
 pip install -r requirements.txt
 
-python gatekeeper.py
+python3 gatekeeper.py

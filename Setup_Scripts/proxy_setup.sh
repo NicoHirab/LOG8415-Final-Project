@@ -8,4 +8,4 @@ cd LOG8415-Final-Project/Proxy
 
 pip install -r requirements.txt
 
-python proxy.py
+python3 proxy.py
