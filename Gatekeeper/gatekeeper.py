@@ -21,7 +21,7 @@ def execute_read_query():
     return response.text
 
 @app.route('/write-query', methods=['POST'])
-def execute_read_query():
+def execute_write_query():
     query = request.get_json()['query']
 
     url = f"http://{PROXY_HOST}:5000/write-query"
