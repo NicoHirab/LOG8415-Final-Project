@@ -15,7 +15,7 @@ QUICKEST_HIT = 2
 
 def execute_database_query(host, query):
     try:
-        with mysql.connector.connect(user='root', host=host, database="sakila") as connection:
+        with mysql.connector.connect(user='root',password='root', host=host, database="sakila") as connection:
             with connection.cursor() as cursor:
                 cursor.execute(query)
                 result = cursor.fetchall()

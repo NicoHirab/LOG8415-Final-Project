@@ -126,3 +126,5 @@ sudo chmod 600 /etc/mysql/my.cnf
 sudo systemctl restart mysql
 sudo systemctl enable mysql
 
+mysql -u root -p"root" -e "CREATE USER 'root'@'%' IDENTIFIED BY 'root';"
+mysql -u root -p"root" -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%'; FLUSH PRIVILEGES;"
