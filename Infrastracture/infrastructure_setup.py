@@ -2,7 +2,7 @@ from infrastructure_utils import *
 
 STANDALONE_DB_PORT = 3306
 SSH_PORT = 22
-FLASK_PORT = 5000
+FLASK_PORT = 5001
 DB_MANAGER_PORT=1186
 DB_NODE_PORT = 2202
 
@@ -15,7 +15,7 @@ private_ip_addresses = {
 }
 
 
-def create_gatekeeper_instance(vpc_id: str, subnet_id: str, key_name: str):
+def create_gatekeeper_instance(vpc_id: str, subnet_id: str, key_name: str,user_data:str):
     sq_gatekeeper = create_security_group(vpc_id, "sg_gatekeeper", "Security group for the gatekeeper")
     
     set_security_group_policy(sq_gatekeeper, 
@@ -28,7 +28,7 @@ def create_gatekeeper_instance(vpc_id: str, subnet_id: str, key_name: str):
     return gatekeeper_instance
 
 
-def create_proxy_instance(vpc_id: str, subnet_id: str, key_name: str,gate_keeper_ip:str):
+def create_proxy_instance(vpc_id: str, subnet_id: str, key_name: str,gate_keeper_ip:str,user_data:str):
     sq_proxy = create_security_group(vpc_id, "sg_proxy", "Security group for the proxy")
     
     set_security_group_policy(sq_proxy, 
@@ -37,7 +37,7 @@ def create_proxy_instance(vpc_id: str, subnet_id: str, key_name: str,gate_keeper
     )
 
     standalone_mysql_instance = launch_ec2(
-        1,"t2.micro", key_name, subnet_id, sq_proxy["GroupId"],private_ip_address=private_ip_addresses["proxy"])[0]
+        1,"t2.micro", key_name, subnet_id, sq_proxy["GroupId"],user_data,private_ip_address=private_ip_addresses["proxy"])[0]
 
     return standalone_mysql_instance
 
@@ -99,10 +99,14 @@ def setup_infrastructure():
     subnet_id = subnets[0]['SubnetId']
     create_key_pairs(key_name)
 
-    gatekeeper = create_gatekeeper_instance(vpc_id,subnet_id,key_name)
 
-    proxy = create_proxy_instance(vpc_id,subnet_id,key_name,gatekeeper.private_ip_address)
+    with open(os.path.join(sys.path[0], '../Setup_Scripts/gatekeeper_setup.sh'), 'r') as f:
+            gatekeeper_setup = f.read() 
+    gatekeeper = create_gatekeeper_instance(vpc_id,subnet_id,key_name,gatekeeper_setup)
 
+    with open(os.path.join(sys.path[0], '../Setup_Scripts/proxy_setup.sh'), 'r') as f:
+            proxy_setup = f.read() 
+    proxy = create_proxy_instance(vpc_id,subnet_id,key_name,gatekeeper.private_ip_address,proxy_setup)
 
 
     with open(os.path.join(sys.path[0], '../Setup_Scripts/manager_node_mysql_setup.sh'), 'r') as f:
