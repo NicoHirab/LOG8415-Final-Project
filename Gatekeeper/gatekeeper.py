@@ -12,7 +12,7 @@ def execute_read_query():
     method_id = request.args.get('method_id')
     query = request.get_json()['query']
 
-    url = f"http://{PROXY_HOST}:5000/read-query?method_id={method_id}"
+    url = f"http://{PROXY_HOST}:5001/read-query?method_id={method_id}"
 
     payload = json.dumps({"query": query})
 
@@ -24,7 +24,7 @@ def execute_read_query():
 def execute_write_query():
     query = request.get_json()['query']
 
-    url = f"http://{PROXY_HOST}:5000/write-query"
+    url = f"http://{PROXY_HOST}:5001/write-query"
 
     payload = json.dumps({"query": query})
 
