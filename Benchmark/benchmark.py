@@ -10,7 +10,7 @@ def benchmark(hostname: str, private_key_path: str, benchmark_script_path: str, 
             client.set_missing_host_key_policy(paramiko.AutoAddPolicy)
 
             # Connect to the remote server using SSH
-            print("Connecting to standalone DB on:", hostname)
+            print("Connecting to DB on:", hostname)
             client.connect(hostname=hostname, port=22, username='ubuntu', key_filename=private_key_path)
 
             # Read the benchmarking script from the local file

@@ -10,10 +10,10 @@ sudo wget https://downloads.mysql.com/docs/sakila-db.tar.gz -O /home/ubuntu/saki
 sudo tar -xvf /home/ubuntu/sakila-db.tar.gz -C /home/ubuntu/
 
 # Upload Sakila database to MySQL
-mysql -u root -proot -e "SOURCE /home/ubuntu/sakila-db/sakila-schema.sql;"
-mysql -u root -proot -e "SOURCE /home/ubuntu/sakila-db/sakila-data.sql;"
+sudo mysql -u root -proot -e "SOURCE /home/ubuntu/sakila-db/sakila-schema.sql;"
+sudo mysql -u root -proot -e "SOURCE /home/ubuntu/sakila-db/sakila-data.sql;"
 
 # Benchmark using Sysbench
-sysbench oltp_read_write --tables=8 --threads=6 --time=360 --max-requests=0 --mysql-db=sakila --mysql-user=root --mysql-password=root prepare
-sysbench oltp_read_write --tables=8 --threads=6 --time=360 --max-requests=0 --mysql-db=sakila --mysql-user=root --mysql-password=root --mysql_storage_engine=NDBCLUSTER run > results.txt
-sysbench oltp_read_write --mysql-db=sakila --mysql-user=root --mysql-password=root cleanup
+sudo sysbench oltp_read_write --tables=8 --threads=6 --time=360 --max-requests=0 --mysql-db=sakila --mysql-user=root --mysql-password=root prepare
+sudo sysbench oltp_read_write --tables=8 --threads=6 --time=360 --max-requests=0 --mysql-db=sakila --mysql-user=root --mysql-password=root --mysql_storage_engine=NDBCLUSTER run > results.txt
+sudo sysbench oltp_read_write --mysql-db=sakila --mysql-user=root --mysql-password=root cleanup
