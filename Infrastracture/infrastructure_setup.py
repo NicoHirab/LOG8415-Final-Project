@@ -1,4 +1,4 @@
-from infrastructure_utils import *
+from Infrastracture.infrastructure_utils import *
 
 STANDALONE_DB_PORT = 3306
 SSH_PORT = 22
@@ -23,7 +23,7 @@ def create_gatekeeper_instance(vpc_id: str, subnet_id: str, key_name: str,user_d
         {"IpProtocol": "tcp", "FromPort":SSH_PORT,"ToPort":SSH_PORT, "IpRanges": [{'CidrIp': '0.0.0.0/0'}]}],
     )
     gatekeeper_instance = launch_ec2(
-        1,"t2.micro", key_name, subnet_id, sq_gatekeeper["GroupId"])[0]
+        1,"t2.micro", key_name, subnet_id, sq_gatekeeper["GroupId"],user_data)[0]
 
     return gatekeeper_instance
 
@@ -100,32 +100,34 @@ def setup_infrastructure():
     create_key_pairs(key_name)
 
 
-    with open(os.path.join(sys.path[0], '../Setup_Scripts/gatekeeper_setup.sh'), 'r') as f:
+    with open(os.path.join(sys.path[0], 'Setup_Scripts/gatekeeper_setup.sh'), 'r') as f:
             gatekeeper_setup = f.read() 
     gatekeeper = create_gatekeeper_instance(vpc_id,subnet_id,key_name,gatekeeper_setup)
 
-    with open(os.path.join(sys.path[0], '../Setup_Scripts/proxy_setup.sh'), 'r') as f:
+    with open(os.path.join(sys.path[0], 'Setup_Scripts/proxy_setup.sh'), 'r') as f:
             proxy_setup = f.read() 
     proxy = create_proxy_instance(vpc_id,subnet_id,key_name,gatekeeper.private_ip_address,proxy_setup)
 
 
-    with open(os.path.join(sys.path[0], '../Setup_Scripts/manager_node_mysql_setup.sh'), 'r') as f:
+    with open(os.path.join(sys.path[0], 'Setup_Scripts/manager_node_mysql_setup.sh'), 'r') as f:
             manager_node_setup = f.read() 
 
     cluster_manager = create_cluster_manager_instance(vpc_id,subnet_id,subnets[0]['CidrBlock'],key_name,proxy.private_ip_address,manager_node_setup)
 
-    with open(os.path.join(sys.path[0], '../Setup_Scripts/data_node_mysql_setup.sh'), 'r') as f:
+    with open(os.path.join(sys.path[0], 'Setup_Scripts/data_node_mysql_setup.sh'), 'r') as f:
             data_node_setup = f.read() 
 
     cluster_data_node_instances = create_cluster_data_instance(vpc_id,subnet_id,subnets[0]['CidrBlock'],key_name,proxy.private_ip_address,data_node_setup)
 
-    with open(os.path.join(sys.path[0], '../Setup_Scripts/standalone_mysql_setup.sh'), 'r') as f:
+    with open(os.path.join(sys.path[0], 'Setup_Scripts/standalone_mysql_setup.sh'), 'r') as f:
             standalone_MYSQL_data = f.read() 
 
-    create_standalone_infra(vpc_id,subnet_id,key_name,standalone_MYSQL_data)
+    standalone = create_standalone_infra(vpc_id,subnet_id,key_name,standalone_MYSQL_data)
 
-
+    return cluster_manager,standalone
 
 
 if __name__ == '__main__':
-    setup_infrastructure()
+    cluster_manager, standalone = setup_infrastructure()
+    print(cluster_manager.id)
+    print(standalone.id)
