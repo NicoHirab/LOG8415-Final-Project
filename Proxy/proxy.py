@@ -84,6 +84,10 @@ def handle_read_query():
     else:
         return perform_direct_hit(query)
 
+@app.route('/write-query', methods=['POST'])
+def handle_read_query():
+    query = request.get_json()['query']
+    return perform_direct_hit(query)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001)
