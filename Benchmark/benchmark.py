@@ -36,6 +36,7 @@ def benchmark(hostname: str, private_key_path: str, benchmark_script_path: str, 
                 sftp.get("results.txt", results_path)
 
             print(f"File downloaded successfully from results.txt to {results_path}")
+            client.close()
 
     except Exception as e:
         # Handle any exceptions that might occur during the process

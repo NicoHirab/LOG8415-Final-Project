@@ -18,6 +18,7 @@ if __name__ == "__main__":
     time.sleep(180)
     
     print(f"Instances {cluster_manager.id} and {standalone.id} are running")
+    
     print(f"Starting benchmarking for Standalone MySQL DB")
     #Run benchmarking for standalone instance
     standalone.load()
@@ -25,8 +26,8 @@ if __name__ == "__main__":
     results_path_standalone = os.path.join(sys.path[0], "Benchmark/results/standalone_benchmark.txt")
     benchmark(standalone.public_ip_address,"LOG8415_Final_Project.pem",standalone_script_path,results_path_standalone)
     print(f"Benchmarking for Standalone MySQL DB completed")
-    print(f"Starting benchmarking for MySQL Cluster DB")
 
+    print(f"Starting benchmarking for MySQL Cluster DB")
     # Run benchmarking for cluster instances
     cluster_manager.load()
     cluster_script_path = os.path.join(sys.path[0], "Setup_Scripts/benchmark_cluster.sh")
