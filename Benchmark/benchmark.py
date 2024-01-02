@@ -18,7 +18,7 @@ def benchmark(hostname: str, private_key_path: str, benchmark_script_path: str, 
                 standalone_script = f.read()
 
             # Execute the benchmarking script on the remote server
-            print("Executing benchmarking script for standalone DB")
+            print("Executing benchmarking script")
             _, stdout, stderr = client.exec_command(command=standalone_script, get_pty=True)
             exit_status = stdout.channel.recv_exit_status()
 
@@ -49,4 +49,4 @@ if __name__ == '__main__':
     results_path_cluster = os.path.join(sys.path[0], "results/cluster_benchmark.txt")
     
     #benchmark("52.207.243.188","LOG8415_Final_Project.pem",standalone_script_path,results_path)
-    benchmark("3.88.20.153","LOG8415_Final_Project.pem",standalone_script_path,results_path_standalone)
+    benchmark("44.202.83.185","LOG8415_Final_Project.pem",cluster_script_path,results_path_cluster)

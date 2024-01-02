@@ -6,7 +6,6 @@ sudo apt update
 sudo apt install -y sysbench
 
 # Start Analysis
-
 sudo wget https://downloads.mysql.com/docs/sakila-db.tar.gz -O /home/ubuntu/sakila-db.tar.gz
 sudo tar -xvf /home/ubuntu/sakila-db.tar.gz -C /home/ubuntu/
 
